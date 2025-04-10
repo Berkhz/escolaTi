@@ -1,4 +1,4 @@
-# arquitetura-choma
+# Escola de Ti - Unicesumar
 
 ## 1. Descrição do Produto
 
