@@ -1,0 +1,172 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!-- USUARIO -->
+    <changeSet id="1" author="chatgpt">
+        <createTable tableName="usuario">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="nome" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="senha" type="VARCHAR(255)"/>
+            <column name="telefone" type="VARCHAR(20)"/>
+            <column name="foto_perfil" type="VARCHAR(255)"/>
+            <column name="data_cadastro" type="TIMESTAMP"/>
+            <column name="ativo" type="BOOLEAN"/>
+            <column name="ultimo_acesso" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+    <!-- PROFESSOR -->
+    <changeSet id="2" author="chatgpt">
+        <createTable tableName="professor">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="usuario_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="biografia" type="TEXT"/>
+            <column name="valor_hora_aula" type="DECIMAL(10,2)"/>
+            <column name="formacao_academica" type="VARCHAR(255)"/>
+            <column name="anos_experiencia" type="INT"/>
+            <column name="disponivel_online" type="BOOLEAN"/>
+            <column name="disponivel_presencial" type="BOOLEAN"/>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="professor" baseColumnNames="usuario_id"
+                constraintName="fk_professor_usuario"
+                referencedTableName="usuario" referencedColumnNames="id"/>
+    </changeSet>
+
+    <!-- ALUNO -->
+    <changeSet id="3" author="chatgpt">
+        <createTable tableName="aluno">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="usuario_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nivel_escolar" type="VARCHAR(255)"/>
+            <column name="idade" type="INT"/>
+            <column name="responsavel" type="VARCHAR(255)"/>
+            <column name="telefone_responsavel" type="VARCHAR(20)"/>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="aluno" baseColumnNames="usuario_id"
+                constraintName="fk_aluno_usuario"
+                referencedTableName="usuario" referencedColumnNames="id"/>
+    </changeSet>
+
+    <!-- DISCIPLINA -->
+    <changeSet id="4" author="chatgpt">
+        <createTable tableName="disciplina">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="nome" type="VARCHAR(255)"/>
+            <column name="descricao" type="TEXT"/>
+            <column name="categoria" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+
+    <!-- PROFESSOR_DISCIPLINA -->
+    <changeSet id="5" author="chatgpt">
+        <createTable tableName="professor_disciplina">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="professor_id" type="BIGINT"/>
+            <column name="disciplina_id" type="BIGINT"/>
+            <column name="nivel_experiencia" type="INT"/>
+            <column name="certificado" type="BOOLEAN"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="professor_disciplina" baseColumnNames="professor_id"
+                                 constraintName="fk_pd_professor" referencedTableName="professor" referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="professor_disciplina" baseColumnNames="disciplina_id"
+                                 constraintName="fk_pd_disciplina" referencedTableName="disciplina" referencedColumnNames="id"/>
+    </changeSet>
+
+    <!-- AULA -->
+    <changeSet id="6" author="chatgpt">
+        <createTable tableName="aula">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="professor_id" type="BIGINT"/>
+            <column name="aluno_id" type="BIGINT"/>
+            <column name="disciplina_id" type="BIGINT"/>
+            <column name="data_hora_inicio" type="TIMESTAMP"/>
+            <column name="data_hora_fim" type="TIMESTAMP"/>
+            <column name="valor" type="DECIMAL(10,2)"/>
+            <column name="modalidade" type="VARCHAR(50)"/>
+            <column name="status" type="VARCHAR(50)"/>
+            <column name="link_virtual" type="VARCHAR(255)"/>
+            <column name="endereco_local" type="VARCHAR(255)"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="aula" baseColumnNames="professor_id"
+                                 constraintName="fk_aula_professor" referencedTableName="professor" referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="aula" baseColumnNames="aluno_id"
+                                 constraintName="fk_aula_aluno" referencedTableName="aluno" referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="aula" baseColumnNames="disciplina_id"
+                                 constraintName="fk_aula_disciplina" referencedTableName="disciplina" referencedColumnNames="id"/>
+    </changeSet>
+
+    <!-- AVALIACAO -->
+    <changeSet id="7" author="chatgpt">
+        <createTable tableName="avaliacao">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="aula_id" type="BIGINT"/>
+            <column name="aluno_id" type="BIGINT"/>
+            <column name="professor_id" type="BIGINT"/>
+            <column name="nota" type="INT"/>
+            <column name="comentario" type="TEXT"/>
+            <column name="data" type="TIMESTAMP"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="avaliacao" baseColumnNames="aula_id"
+                                 constraintName="fk_avaliacao_aula" referencedTableName="aula" referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="avaliacao" baseColumnNames="aluno_id"
+                                 constraintName="fk_avaliacao_aluno" referencedTableName="aluno" referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="avaliacao" baseColumnNames="professor_id"
+                                 constraintName="fk_avaliacao_professor" referencedTableName="professor" referencedColumnNames="id"/>
+    </changeSet>
+
+    <!-- MENSAGEM -->
+    <changeSet id="8" author="chatgpt">
+        <createTable tableName="mensagem">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="remetente_id" type="BIGINT"/>
+            <column name="destinatario_id" type="BIGINT"/>
+            <column name="conteudo" type="TEXT"/>
+            <column name="data_envio" type="TIMESTAMP"/>
+            <column name="lida" type="BOOLEAN"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="mensagem" baseColumnNames="remetente_id"
+                                 constraintName="fk_mensagem_remetente" referencedTableName="usuario" referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="mensagem" baseColumnNames="destinatario_id"
+                                 constraintName="fk_mensagem_destinatario" referencedTableName="usuario" referencedColumnNames="id"/>
+    </changeSet>
+
+</databaseChangeLog>

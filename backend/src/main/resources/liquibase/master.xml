@@ -7,8 +7,7 @@
 
     <!--<include file="liquibase/changelog/initial_schema.xml" relativeToChangelogFile="false"/>-->
 
-    <include file="liquibase/changelog/20230416183603_create_table_pessoa.xml" relativeToChangelogFile="false"/>
-    <include file="liquibase/changelog/20230416183939_add_column_email_pessoa.xml" relativeToChangelogFile="false"/>
+    <include file="liquibase/changelog/20252105-1325.xml" relativeToChangelogFile="false"/>
 
 
 </databaseChangeLog>
