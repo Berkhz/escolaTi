@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: teachme-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: teach_me_db
+      POSTGRES_USER: teachme
+      POSTGRES_PASSWORD: teachme123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - teachme-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U teachme -d teach_me_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Opcional: pgAdmin para gerenciar o banco de dados via interface web
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: teachme-pgadmin
+    depends_on:
+      - postgres
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@teachme.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    networks:
+      - teachme-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    name: teachme-postgres-data
+
+networks:
+  teachme-network:
+    name: teachme-network
+    driver: bridge
